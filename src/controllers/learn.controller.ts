@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Learn from '../models/Learn';
-import { ILearnData } from '../interfaces/Learn';
+import Learn from '../models/learn.model';
+import { ILearnData } from '../interfaces/learn.interface';
 
 // Controller to add a learning resource
 export const addLearn = async (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Problem from '../models/Problem';
-import { IProblemData } from '../interfaces/Problem';
+import Problem from '../models/problem.model';
+import { IProblemData } from '../interfaces/problem.interface';
 
 export const addProblem = async (req: Request, res: Response) => {
   try {

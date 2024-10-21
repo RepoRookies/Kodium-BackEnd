@@ -1,5 +1,5 @@
 import mongoose, { Model, Schema } from 'mongoose';
-import { IProblemData } from '../interfaces/Problem';
+import { IProblemData } from '../interfaces/problem.interface';
 
 const ProblemSchema: Schema<IProblemData> = new Schema({
   title: { 

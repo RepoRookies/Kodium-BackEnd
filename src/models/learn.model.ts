@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model } from 'mongoose';
-import { ILearnData } from '../interfaces/Learn';
+import { ILearnData } from '../interfaces/learn.interface';
 
 const LearnSchema: Schema<ILearnData> = new Schema({
   title: {

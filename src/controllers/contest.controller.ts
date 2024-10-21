@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import Contest from '../models/Contest'; 
-import { IContestData } from '../interfaces/Contest';
+import Contest from '../models/contest.model'; 
+import { IContestData } from '../interfaces/contest.interface';
 
 // Controller to add a contest
 export const addContest = async (req: Request, res: Response) => {

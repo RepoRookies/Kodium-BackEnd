@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model } from 'mongoose';
-import { IContestData } from '../interfaces/Contest';
+import { IContestData } from '../interfaces/contest.interface';
 
 const ContestSchema: Schema<IContestData> = new Schema({
   name: {
