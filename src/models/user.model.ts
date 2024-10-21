@@ -1,5 +1,6 @@
 import mongoose, { Schema, Model } from 'mongoose';
 import { IUserData } from '../interfaces/user.interface';
+import { IAdminData } from '../interfaces/user.interface';
 
 const UserSchema: Schema<IUserData> = new Schema({
   name: {
@@ -24,6 +25,22 @@ const UserSchema: Schema<IUserData> = new Schema({
   },
 });
 
-const User: Model<IUserData> = mongoose.model<IUserData>('User', UserSchema);
+const AdminSchema: Schema<IAdminData> = new Schema({
+  key: {
+    type: String,
+    trim: true,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+});
 
-export default User;
+const User: Model<IUserData> = mongoose.model<IUserData>('User', UserSchema);
+const Admin: Model<IAdminData> = mongoose.model<IAdminData>(
+  'Admin',
+  AdminSchema
+);
+
+export { User, Admin };

@@ -1,51 +1,99 @@
 import { Request, Response } from 'express';
-import Problem from '../models/problem.model';
+import { Admin } from '../models/user.model';
+import { Problem } from '../models/problem.model';
 import { IProblemData } from '../interfaces/problem.interface';
 
-export const addProblem = async (req: Request, res: Response) => {
+const addProblem = async (req: Request, res: Response): Promise<void> => {
   try {
+    const adminId = req.cookies.id;
+    if (!adminId) {
+      res.status(401).json({ message: 'Admin Login Required!', success: false });
+      return;
+    }
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      res.status(401).json({ message: 'Admin Login Required!', success: false });
+      return;
+    }
     const problemData: IProblemData = req.body;
+
+    const existingProblem = await Problem.findOne({ title: problemData.title });
+    if (existingProblem) {
+      res.status(400).json({ message: 'Problem Already Exists!', success: false });
+      return;
+    }
+
     const newProblem = new Problem(problemData);
     await newProblem.save();
-    return res.status(201).json(newProblem);
+    res.status(201).json({ message: 'Problem Added Successfully', success: true, problem: newProblem });
   } catch (error) {
-    return res.status(500).json({ message: 'Error adding problem', error });
+    res.status(500).json({ message: 'Error Adding Problem', success: false, error });
   }
 };
 
-export const getProblems = async (req: Request, res: Response) => {
+const getProblems = async (_: Request, res: Response) => {
   try {
-    const problems = await Problem.find();
-    return res.status(200).json(problems);
+    const problems = await Problem.find().limit(10);
+    res.status(200).json({ message: 'Problems Fetched Successfully', success: true, problems: problems });
   } catch (error) {
-    return res.status(500).json({ message: 'Error fetching problems', error });
+    res.status(500).json({ message: 'Error Fetching Problems', success: false, error });
   }
 };
 
-export const getProblemById = async (req: Request, res: Response) => {
+const getProblemById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const problem = await Problem.findOne({ id: parseInt(id) });
+    const problem = await Problem.findOne({ title: id });
     if (!problem) {
-      return res.status(404).json({ message: 'Problem not found' });
+      res.status(404).json({ message: 'Problem Not Found', success: false });
+      return; 
     }
-    return res.status(200).json(problem);
+    res.status(200).json(problem);
   } catch (error) {
-    return res.status(500).json({ message: 'Error fetching problem', error });
+    res
+      .status(500)
+      .json({ message: 'Error Fetching Problem', success: false, error });
   }
 };
 
-export const deleteProblem = async (req: Request, res: Response) => {
+const deleteProblem = async (req: Request, res: Response) => {
   try {
+    const adminId = req.cookies.id;
+    if (!adminId) {
+      res
+        .status(401)
+        .json({ message: 'Admin Login Required!', success: false });
+      return;
+    }
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      res
+        .status(401)
+        .json({ message: 'Admin Login Required!', success: false });
+      return;
+    }
+
     const { id } = req.params;
     const deletedProblem = await Problem.findOneAndDelete({
-      id: parseInt(id),
+      title: id,
     });
     if (!deletedProblem) {
-      return res.status(404).json({ message: 'Problem not found' });
+      res.status(404).json({ message: 'Problem Not Found', success: false });
+      return;
     }
-    return res.status(200).json({ message: 'Problem deleted successfully' });
+    res
+      .status(200)
+      .json({ message: 'Problem Deleted Successfully!', success: true });
   } catch (error) {
-    return res.status(500).json({ message: 'Error deleting problem', error });
+    res
+      .status(500)
+      .json({ message: 'Error deleting problem', success: false, error });
   }
 };
+
+export default {
+  getProblems,
+  getProblemById,
+  addProblem,
+  deleteProblem,
+}

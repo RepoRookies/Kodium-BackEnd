@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Contest from '../models/contest.model'; 
+import { Contest } from '../models/contest.model'; 
 import { IContestData } from '../interfaces/contest.interface';
 
 // Controller to add a contest
@@ -10,7 +10,7 @@ export const addContest = async (req: Request, res: Response) => {
     await newContest.save();
     return res.status(201).json(newContest);
   } catch (error) {
-    return res.status(500).json({ message: 'Error adding contest', error });
+    return res.status(500).json({ message: 'Error Adding Contest', error });
   }
 };
 
@@ -20,7 +20,7 @@ export const getContests = async (req: Request, res: Response) => {
     const contests = await Contest.find().populate('users').populate('problems');
     return res.status(200).json(contests);
   } catch (error) {
-    return res.status(500).json({ message: 'Error fetching contests', error });
+    return res.status(500).json({ message: 'Error Fetching Contests', error });
   }
 };
 

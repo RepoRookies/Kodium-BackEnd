@@ -10,12 +10,15 @@ const LearnSchema: Schema<ILearnData> = new Schema({
     type: String,
     required: true,
   },
-  problemId: {
+  problem: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
 });
 
-const Learn: Model<ILearnData> = mongoose.model<ILearnData>('Learn', LearnSchema);
+const Learn: Model<ILearnData> = mongoose.model<ILearnData>(
+  'Learn',
+  LearnSchema
+);
 
-export default Learn;
+export { Learn };

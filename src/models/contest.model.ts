@@ -30,4 +30,4 @@ const Contest: Model<IContestData> = mongoose.model<IContestData>(
   ContestSchema
 );
 
-export default Contest;
+export { Contest };

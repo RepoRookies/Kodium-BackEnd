@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 export interface IProblemData extends Document {
   title: string;
@@ -13,4 +13,10 @@ export interface IProblemData extends Document {
     output: string;
   }[];
   hints: string[];
+  submissions: {
+    userId: mongoose.Types.ObjectId;
+    language: string;
+    program: string;
+    verdict: number;
+  }[];
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Learn from '../models/learn.model';
+import { Learn } from '../models/learn.model';
 import { ILearnData } from '../interfaces/learn.interface';
 
 // Controller to add a learning resource

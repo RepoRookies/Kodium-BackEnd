@@ -6,3 +6,8 @@ export interface IUserData extends Document {
   username: string;
   password: string;
 }
+
+export interface IAdminData extends Document {
+  key: string;
+  password: string;
+}
