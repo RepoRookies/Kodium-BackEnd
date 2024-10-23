@@ -1,16 +1,26 @@
 import mongoose, { Document } from "mongoose";
 
 export interface ISubmissionData extends Document {
-    userId: mongoose.Types.ObjectId,
-    problemId: mongoose.Types.ObjectId,
+    username: string,
+    problemTitle: string,
+    problemName:string,
+    difficulty:string,
     language: string,
     program: string,
     verdict: string,
 }
 
 export interface ISubmissionRequest extends Document {
-    userId: mongoose.Types.ObjectId,
-    problemId: mongoose.Types.ObjectId,
+    problemName:string,
+    problemTitle: string,
+    difficulty:string,
     language: string,
     program: string,
+}
+
+
+export interface IRunRequest extends Document {
+    language: string,
+    program: string,
+    input:string
 }

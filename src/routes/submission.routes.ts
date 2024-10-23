@@ -4,8 +4,9 @@ import submissionController from '../controllers/submission.controller';
 
 const router: Router = Router();
 
-router.post('/',submissionController.submitProblem);
-router.get('/', submissionController.getUserSubmissions);
+router.post('/',isAuthenticated,submissionController.submitProblem);
+router.post('/run',isAuthenticated,submissionController.runSubmission);
+router.get('/:username', submissionController.getUserSubmissions);
 router.put('/status',submissionController.updateProblemStatus)
 
 module.exports = router;
