@@ -7,6 +7,10 @@ const ProblemSchema: Schema<IProblemData> = new Schema({
     required: true,
     unique: true,
   },
+  displayName: {
+    type: String,
+    required: true,
+  },
   difficulty: {
     type: String,
     required: true,

@@ -1,6 +1,7 @@
 import mongoose, { Document } from "mongoose";
 
 export interface IProblemData extends Document {
+  displayName:string,
   title: string;
   difficulty: string;
   tags: string[];
