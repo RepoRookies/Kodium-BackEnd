@@ -32,13 +32,15 @@ export const isAuthenticated = async (
     }
 
     const id = decode.adminId? decode.adminId: decode.userId;
+    const role = decode.adminId? "admin" : "user";
     res.cookie('id', id, { httpOnly: true, sameSite: 'strict' });
+    res.cookie('role', role, { httpOnly: true, sameSite: 'strict' });
     next();
   } catch (error) {
     if (error instanceof TokenExpiredError) {
       res
         .status(401)
-        .json({ message: 'You are not Loggin IN!', success: false });
+        .json({ message: 'You are not Logged IN!', success: false });
       return;
     }
 

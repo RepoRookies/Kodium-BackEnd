@@ -33,7 +33,8 @@ const addProblem = async (req: Request, res: Response): Promise<void> => {
 
 const getProblems = async (_: Request, res: Response) => {
   try {
-    const problems = await Problem.find().limit(10);
+    const problems = await Problem.find({},{title:1, difficulty:1, tags:1}).limit(100);
+    console.log(problems)
     res.status(200).json({ message: 'Problems Fetched Successfully', success: true, problems: problems });
   } catch (error) {
     res.status(500).json({ message: 'Error Fetching Problems', success: false, error });
@@ -43,7 +44,7 @@ const getProblems = async (_: Request, res: Response) => {
 const getProblemById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const problem = await Problem.findOne({ title: id });
+    const problem = await Problem.findOne({ title: id },{actualTestCases:0});
     if (!problem) {
       res.status(404).json({ message: 'Problem Not Found', success: false });
       return; 

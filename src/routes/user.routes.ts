@@ -6,6 +6,7 @@ const router: Router = Router();
 
 router.post('/register', userController.register);
 router.post('/login', userController.login);
+router.get('/refresh', userController.refresh);
 router.get('/logout', isAuthenticated, userController.logout);
 
 module.exports = router;

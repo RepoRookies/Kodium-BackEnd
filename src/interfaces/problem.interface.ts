@@ -8,10 +8,16 @@ export interface IProblemData extends Document {
   inputFormat: string;
   outputFormat: string;
   constraints: string[];
+  timeLimit: number,
+  memoryLimit: number,
   exampleTestCases: {
     input: string;
     output: string;
   }[];
+  actualTestCases: {
+    input: string;
+    output: string;
+  }[]
   hints: string[];
   submissions: {
     userId: mongoose.Types.ObjectId;
