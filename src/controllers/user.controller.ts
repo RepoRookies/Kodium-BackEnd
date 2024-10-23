@@ -81,17 +81,11 @@ const login = async (req: Request, res: Response): Promise<void> => {
       }
 
       const token = jwt.sign({ adminId: admin._id }, JWT_SECRET, {
-        expiresIn: '5m',
+        expiresIn: '7d',
       });
 
       res.cookie('id', admin._id);
-      res
-        .cookie('token', token, {
-          httpOnly: true,
-          sameSite: 'strict',
-          maxAge: 1 * 24 * 60 * 60 * 1000,
-        })
-        .cookie('user', {
+      res.cookie('user', {
           username: admin.key,
           token: token,
           email:"kodium@iiitk.ac.in",
@@ -100,10 +94,10 @@ const login = async (req: Request, res: Response): Promise<void> => {
         }, {
           httpOnly: true,
           sameSite: 'strict',
-          maxAge: 1 * 24 * 60 * 60 * 1000,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
         })
-        .status(200)
-        .json({
+        
+        res.status(200).json({
           message: `Welcome Kodium Admin!`,
           success: true,
           user: {
@@ -134,13 +128,8 @@ const login = async (req: Request, res: Response): Promise<void> => {
       expiresIn: '5m',
     });
     res.cookie('id', user._id);
-    res
-      .cookie('token', token, {
-        httpOnly: true,
-        sameSite: 'strict',
-        maxAge: 1 * 24 * 60 * 60 * 1000,
-      })
-      .cookie('user', {
+
+    res.cookie('user', {
         username: user.username,
         name:user.name,
         token : token,
@@ -149,6 +138,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       }, {
         httpOnly: true,
         sameSite: 'strict',
+        secure:true,
         maxAge: 1 * 24 * 60 * 60 * 1000,
       })
       .status(200)
@@ -163,6 +153,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
           role:"user"
         },
       });
+      
   } catch (error) {
     res.status(500).json({ message: 'Error Logging In...', success: false, error });
   }
@@ -170,8 +161,11 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
 const logout = async (_: Request, res: Response): Promise<void> => {
   try {
-    res
-      .cookie('token', '', { maxAge: 0 })
+    res.clearCookie('user',{
+      httpOnly: true,
+      sameSite: 'strict',
+      secure:true,
+    })
       .json({ message: 'Logged Out Successfully!', success: true });
   } catch (error) {
     res.status(500).json({ message: 'Error Logging Out...', success: false });
@@ -180,6 +174,8 @@ const logout = async (_: Request, res: Response): Promise<void> => {
 }
 const refresh = async (req: Request, res: Response): Promise<void> => {
   try{
+    console.log("HI")
+    console.log(req.cookies)
     const user = req.cookies.user || {}
     console.log(user)
     res.json(user)
