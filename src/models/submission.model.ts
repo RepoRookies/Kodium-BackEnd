@@ -2,14 +2,16 @@ import mongoose, { Model, Schema } from 'mongoose';
 import { ISubmissionData } from '../interfaces/submission.interface';
 
 const SubmissionSchema : Schema<ISubmissionData> = new Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+      username: {
+        type: String,
         required: true,
       },
-      problemId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Problem',
+      problemTitle: {
+        type: String,
+        required: true,
+      },
+      problemName: {
+        type: String,
         required: true,
       },
       language: {
@@ -24,6 +26,12 @@ const SubmissionSchema : Schema<ISubmissionData> = new Schema({
         type: String,
         required: true,
       },
+      difficulty:{
+        type:String,
+        required:true
+      }
+},{
+  timestamps:true
 })
 
 const Submission: Model<ISubmissionData> = mongoose.model<ISubmissionData>(
