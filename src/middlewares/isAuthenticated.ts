@@ -12,7 +12,8 @@ export const isAuthenticated = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const token = req.cookies.token;
+    const token = req.cookies.user.token;
+    
     if (!token) {
       res
         .status(401)
@@ -20,10 +21,12 @@ export const isAuthenticated = async (
       return;
     }
 
+
     const decode = jwt.verify(
       token,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
+
     if (!decode) {
       res
         .status(401)
