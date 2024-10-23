@@ -15,14 +15,17 @@ const submitProblem =  async (req: Request, res: Response): Promise<void> => {
             "java": 62,
             "python": 71,
         }
+
+
         const submsissionDetails : ISubmissionRequest = req.body
-        const problem = await Problem.findOne({ _id: submsissionDetails.problemId });
+        console.log(submsissionDetails)
+        const problem = await Problem.findOne({ title: submsissionDetails.problemTitle });
         if (!problem) {
             res.status(404).json({ message: 'Problem Does Not Exist', success: false });
             return; 
         }
-        const submission = new Submission({...submsissionDetails,verdict:"Running"})
-        await submission.save()
+        const submission = new Submission({...submsissionDetails,verdict:"Running",username:req.cookies.user.username})
+
         // console.log(submission)
         const protocol = req.protocol;
         let  host = req.hostname;
@@ -50,6 +53,7 @@ const submitProblem =  async (req: Request, res: Response): Promise<void> => {
             return payload
         })
         const judge = await axios.post(`${process.env.JUDGE0_URL}/submissions/batch?base64_encoded=true`,{submissions:judge0Payload})
+        await submission.save()
         res.status(201).json({ message: 'Submission made Successfully', success: true, submission: submission });
     }
     catch(error){
@@ -88,8 +92,8 @@ const updateProblemStatus = async (req: Request, res: Response): Promise<void> =
 
 const getUserSubmissions = async (req:Request,res:Response): Promise<void> => {
     try{
-        const id = req.body.id
-        const submissions = await Submission.find({userId:id})
+        const username = req.params.username
+        const submissions = await Submission.find({username:username}).sort({createdAt:-1})
         res.status(200).json({
             success:true,
             submissions:submissions
