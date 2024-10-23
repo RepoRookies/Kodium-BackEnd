@@ -91,12 +91,27 @@ const login = async (req: Request, res: Response): Promise<void> => {
           sameSite: 'strict',
           maxAge: 1 * 24 * 60 * 60 * 1000,
         })
+        .cookie('user', {
+          username: admin.key,
+          token: token,
+          email:"kodium@iiitk.ac.in",
+          name:"Kodium Admin",
+          role : "admin"
+        }, {
+          httpOnly: true,
+          sameSite: 'strict',
+          maxAge: 1 * 24 * 60 * 60 * 1000,
+        })
         .status(200)
         .json({
           message: `Welcome Kodium Admin!`,
           success: true,
           user: {
-            key: admin.key,
+            username: admin.key,
+            token: token,
+            email:"kodium@iiitk.ac.in",
+            name:"Kodium Admin",
+            role : "admin"
           },
         });
       return;
@@ -125,14 +140,27 @@ const login = async (req: Request, res: Response): Promise<void> => {
         sameSite: 'strict',
         maxAge: 1 * 24 * 60 * 60 * 1000,
       })
+      .cookie('user', {
+        username: user.username,
+        name:user.name,
+        token : token,
+        email:user.email,
+        role:"user"
+      }, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 1 * 24 * 60 * 60 * 1000,
+      })
       .status(200)
       .json({
         message: `Welcome @${user.username}!`,
         success: true,
         user: {
-          name: user.name,
-          email: user.email,
           username: user.username,
+          name:user.name,
+          token : token,
+          email:user.email,
+          role:"user"
         },
       });
   } catch (error) {
@@ -149,10 +177,20 @@ const logout = async (_: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: 'Error Logging Out...', success: false });
     console.log(error);
   }
-};
-
+}
+const refresh = async (req: Request, res: Response): Promise<void> => {
+  try{
+    const user = req.cookies.user || {}
+    console.log(user)
+    res.json(user)
+  }
+  catch(err){
+    res.status(500).send({})
+  }
+}
 export default {
   register,
   login,
   logout,
-};
+  refresh
+}

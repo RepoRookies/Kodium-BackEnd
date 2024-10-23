@@ -27,9 +27,11 @@ app.get('/', (_: Request, res: Response) => {
 // Routes
 const userRoutes = require('./routes/user.routes');
 const problemRoutes = require('./routes/problem.routes');
+const submissionRoutes = require('./routes/submission.routes')
 
 app.use('/app/v1/user', userRoutes);
 app.use('/app/v1/problems', problemRoutes);
+app.use('/app/v1/submission', submissionRoutes);
 
 app.listen(PORT, () => {
   connectDB();
