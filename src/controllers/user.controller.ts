@@ -125,7 +125,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
-      expiresIn: '5m',
+      expiresIn: '7d',
     });
     res.cookie('id', user._id);
 
@@ -139,7 +139,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
         httpOnly: true,
         sameSite: 'strict',
         secure:true,
-        maxAge: 1 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .status(200)
       .json({
