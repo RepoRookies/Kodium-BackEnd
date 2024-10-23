@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Admin } from '../models/user.model';
 import { Problem } from '../models/problem.model';
 import { Submission } from '../models/submission.model';
-import { ISubmissionData, ISubmissionRequest } from '../interfaces/submission.interface';
+import { IRunRequest, ISubmissionData, ISubmissionRequest } from '../interfaces/submission.interface';
 import problemController from '../controllers/problem.controller';
 import axios from "axios"
 import { defaultMaxListeners } from 'events';
@@ -105,11 +105,53 @@ const getUserSubmissions = async (req:Request,res:Response): Promise<void> => {
     }
 }
 
+const runSubmission = async (req:Request,res:Response): Promise<void> => {
+    try{
+        const languageLookup  = {
+            "cpp": 54,
+            "java": 62,
+            "python": 71,
+        }
+        const data:IRunRequest = req.body
+        const payload = {
+            source_code: Buffer.from(data.program).toString('base64'),
+            stdin: Buffer.from(data.input).toString('base64'),
+            language_id: languageLookup[data.language as keyof typeof languageLookup],
+            cpu_time_limit: 10,
+            memory_limit: 512000,
+            cpu_extra_time: 1,
+            number_of_runs : 3,
+        }
+        const judge = await axios.post(`${process.env.JUDGE0_URL}/submissions?base64_encoded=true&wait=true`,{...payload})
+        // console.log(judge.data)
+        
+        const {stdout,compile_output,message,time,memory,status} = judge.data
+        let output = Buffer.from(stdout||"","base64").toString("utf-8")||""
+        let error = `${status.description} : ${Buffer.from(compile_output||"","base64").toString("utf-8")}`||""
+        if(error.length>255){
+            error = `${error.slice(0,255)}...`
+        }
+        if(output.length>255){
+            output = `${output.slice(0,255)}...`
+        }
+        const result = [`${output||error}`,`Time : ${time||0} seconds`,`Memory: ${memory||0} kB`].join(`\n`)
+        res.json({
+            success:true,
+            result
+        })
+
+    }
+    catch(err){
+        console.log(err)
+        res.status(500).json({ message: 'Error Fetching Run', success: false, err });
+    }
+}
 // const getAllSubmissions = async (req: Request, res: Response): Promise<void> => {
 //     const 
 // }
 export default{
     getUserSubmissions,
     submitProblem,
-    updateProblemStatus
+    updateProblemStatus,
+    runSubmission
 }
